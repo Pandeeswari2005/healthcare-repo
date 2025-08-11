@@ -1,0 +1,52 @@
+package com.examly.springapp.controller;
+
+import com.examly.springapp.model.Doctor;
+
+import com.examly.springapp.service.DoctorService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+
+@RequestMapping("/api/doctors")
+
+public class DoctorController {
+
+    @Autowired
+    private DoctorService doctorService;
+
+    @PostMapping
+    public ResponseEntity<Doctor> createDoctor(@RequestBody Doctor doctor) {
+        Doctor savedDoctor = doctorService.createDoctor(doctor);
+        return ResponseEntity.status(201).body(savedDoctor);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Doctor>> getAllDoctors() {
+        List<Doctor> doctors = doctorService.getAllDoctors();
+        return ResponseEntity.ok(doctors);
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
+        Optional<Doctor> doctor = doctorService.getDoctorById(id);
+        return doctor.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
+        doctorService.deleteDoctor(id);
+        return ResponseEntity.noContent().build();
+
+    }
+
+}
