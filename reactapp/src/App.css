@@ -1,0 +1,55 @@
+body {
+
+      margin: 0;
+
+        font-family: Arial, sans-serif;
+
+          background-color: #f7f7f7;
+
+}
+
+
+
+h1 {
+
+      color: #333;
+
+        margin-bottom: 20px;
+
+}
+
+
+
+.error {
+
+      color: red;
+
+        font-size: 14px;
+
+          margin-top: 4px;
+
+}
+
+
+
+.appointment-form,
+
+.appointment-list {
+
+      max-width: 600px;
+
+        margin: 40px auto;
+
+          padding: 20px;
+
+            background: white;
+
+              border-radius: 8px;
+
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+}
+
+
+
+

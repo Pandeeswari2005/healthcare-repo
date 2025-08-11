@@ -1,0 +1,24 @@
+.appointment-form {
+
+      display: flex;
+
+        flex-direction: column;
+
+          width: 300px;
+
+            gap: 10px;
+
+              margin: 20px auto;
+
+}
+
+
+
+.appointment-form .error {
+
+      color: red;
+
+        font-size: 12px;
+
+}
+

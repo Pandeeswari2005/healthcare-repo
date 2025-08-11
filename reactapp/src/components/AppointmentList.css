@@ -1,0 +1,47 @@
+.appointment-list {
+
+      width: 90%;
+
+        margin: 20px auto;
+
+        }
+
+
+
+        .appointment-list select {
+
+              margin-bottom: 10px;
+
+        }
+
+
+
+        table {
+
+              width: 100%;
+
+                border-collapse: collapse;
+
+                  margin-top: 10px;
+
+        }
+
+
+
+        table, th, td {
+
+              border: 1px solid #ccc;
+
+        }
+
+
+
+        th, td {
+
+              padding: 8px;
+
+                text-align: left;
+
+        }
+
+      

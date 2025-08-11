@@ -62,8 +62,9 @@ throw new RuntimeException("Doctor not available at this time.");
 .build();
  return appointmentRepository.save(appointment);
   }
- public Appointment updateStatus(Long appointmentId, AppointmentStatus status) {
- Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new RuntimeException("Appointment not found"));
+ public Appointment updateStatus( Long id, AppointmentStatus status) {
+ Appointment appointment = appointmentRepository.findById(id)
+ .orElseThrow(() -> new RuntimeException("Appointment not found"));
  appointment.setStatus(status);
  return appointmentRepository.save(appointment);
 
