@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-
-
+import './AppointmentList.css';
 
 export default function AppointmentList({ appointments = [] }) {
 
@@ -81,4 +80,5 @@ export default function AppointmentList({ appointments = [] }) {
                                                                                                                                           );
 
 }
+
 

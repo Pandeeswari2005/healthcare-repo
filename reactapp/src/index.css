@@ -1,0 +1,145 @@
+
+
+
+
+
+
+* {
+
+      margin: 0;
+
+        padding: 0;
+
+          box-sizing: border-box;
+
+}
+
+
+
+/* 2. Smooth scroll behavior */
+
+html {
+
+      scroll-behavior: smooth;
+
+}
+
+
+
+/* 3. Root Variables for Colors and Fonts */
+
+:root {
+
+      --primary-color: #3498db;
+
+        --primary-hover: #2980b9;
+
+          --secondary-color: #2c3e50;
+
+            --background-color: #f7f9fc;
+
+              --text-color: #333;
+
+                --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+                }
+
+
+
+                /* 4. Global Body Styling */
+
+                body {
+
+                      font-family: var(--font-family);
+
+                        background-color: var(--background-color);
+
+                          color: var(--text-color);
+
+                            line-height: 1.6;
+
+                            }
+
+
+
+                            /* 5. Link Styling */
+
+                            a {
+
+                                  text-decoration: none;
+
+                                    color: var(--primary-color);
+
+                                    }
+
+                                    a:hover {
+
+                                          color: var(--primary-hover);
+
+                                    }
+
+
+
+                                    /* 6. Scrollbar Styling (optional, looks nice on modern browsers) */
+
+                                    ::-webkit-scrollbar {
+
+                                          width: 8px;
+
+                                    }
+
+                                    ::-webkit-scrollbar-thumb {
+
+                                          background: var(--primary-color);
+
+                                            border-radius: 4px;
+
+                                    }
+
+                                    ::-webkit-scrollbar-thumb:hover {
+
+                                          background: var(--primary-hover);
+
+                                          }
+
+                                          ::-webkit-scrollbar-track {
+
+                                              background: #e6e6e6;
+
+                                          }
+
+
+
+                                          /* 7. Container Helper Class */
+
+                                          .container {
+
+                                              max-width: 1200px;
+
+                                                margin: auto;
+
+                                                  padding: 0 20px;
+
+                                                  }
+
+
+
+                                                  /* 8. Utility Classes */
+
+                                                  .text-center {
+
+                                                    text-align: center;
+
+                                                    }
+
+                                                    .mt-20 {
+
+                                                          margin-top: 20px;
+
+                                                    }
+
+                                                    .mb-20 {
+
+                                                      margin-bottom: 20px;
+
+                                                      }
