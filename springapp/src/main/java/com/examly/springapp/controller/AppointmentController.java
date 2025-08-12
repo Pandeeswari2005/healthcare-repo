@@ -34,7 +34,7 @@ public class AppointmentController {
 
     private AppointmentService appointmentService;
 
-    @PostMapping
+    // @PostMapping
 
     // public ResponseEntity<?> bookAppointment(
 
@@ -94,17 +94,48 @@ public class AppointmentController {
     // }
 
     // }
-    public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequest request) {
-    
+    // public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequest
+    // request) {
 
-    Long patientId = request.getPatientId();
-    Long doctorId = request.getDoctorId();
-    LocalDate date = LocalDate.parse(request.getAppointmentDate());
-    LocalTime time = LocalTime.parse(request.getAppointmentTime());
-    String reason = request.getReason();
-    Appointment created = appointmentService.bookAppointment(patientId, doctorId, date, time, reason);
-    return new ResponseEntity<>(created,HttpStatus.CREATED);
+    // Long patientId = request.getPatientId();
+    // Long doctorId = request.getDoctorId();
+    // LocalDate date = LocalDate.parse(request.getAppointmentDate());
+    // LocalTime time = LocalTime.parse(request.getAppointmentTime());
+    // String reason = request.getReason();
+    // Appointment created = appointmentService.bookAppointment(patientId, doctorId,
+    // date, time, reason);return new ResponseEntity<>(created,HttpStatus.CREATED);
+    // }
+    @PostMapping
+
+    public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequest request) {
+
+        try {
+
+            Long patientId = request.getPatientId();
+
+            Long doctorId = request.getDoctorId();
+
+            LocalDate date = LocalDate.parse(request.getAppointmentDate());
+
+            LocalTime time = LocalTime.parse(request.getAppointmentTime());
+
+            String reason = request.getReason();
+
+            Appointment created = appointmentService.bookAppointment(patientId, doctorId, date, time, reason);
+
+            return new ResponseEntity<>(created, HttpStatus.CREATED);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+
+                    .body(Map.of("error", e.getMessage()));
+
+        }
+
     }
+
+    
 
     @PatchMapping("/{id}/status")
 

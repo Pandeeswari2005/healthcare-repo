@@ -1,19 +1,309 @@
-// src/components/AppointmentForm.js
+// import React, { useState } from "react";
+
+
+
+// export default function AppointmentForm({ onSubmit }) {
+
+//     const [formData, setFormData] = useState({
+
+//         patientId: "",
+
+//         doctorId: "",
+
+//         appointmentDate: "",
+
+//         appointmentTime: "",
+
+//         reason: "",
+
+//     });
+
+
+
+//     const handleChange = (e) => {
+
+//         setFormData({ ...formData, [e.target.name]: e.target.value });
+
+//     };
+
+
+
+//     const handleSubmit = (e) => {
+
+//         e.preventDefault();
+
+//         if (onSubmit) onSubmit(formData);
+
+//         setFormData({
+
+//             patientId: "",
+
+//             doctorId: "",
+
+//             appointmentDate: "",
+
+//             appointmentTime: "",
+
+//             reason: "",
+
+//         });
+
+//     };
+
+
+
+//     return (
+
+//         <form onSubmit={handleSubmit}>
+
+//             <label>
+
+//                 Patient:
+
+//                 <select
+
+//                     name="patientId"
+
+//                     value={formData.patientId}
+
+//                     onChange={handleChange}
+
+//                     required
+
+//                     data-testid="patient-select"
+
+//                 >
+
+//                     <option value="">Select patient</option>
+
+//                     <option value="1">Alice</option>
+
+//                     <option value="2">Bob</option>
+
+//                 </select>
+
+//             </label>
+
+
+
+//             <label>
+
+//                 Doctor:
+
+//                 <select
+
+//                     name="doctorId"
+
+//                     value={formData.doctorId}
+
+//                     onChange={handleChange}
+
+//                     required
+
+//                     data-testid="doctor-select"
+
+//                 >
+
+//                     <option value="">Select doctor</option>
+
+//                     <option value="1">Dr. Smith (Cardiology)</option>
+
+//                     <option value="2">Dr. Jane (Neurology)</option>
+
+//                 </select>
+
+//             </label>
+
+
+
+//             <label>
+
+//                 Date:
+
+//                 <input
+
+//                     type="date"
+
+//                     name="appointmentDate"
+
+//                     value={formData.appointmentDate}
+
+//                     onChange={handleChange}
+
+//                     required
+
+//                     data-testid="date-input"
+
+//                 />
+
+//             </label>
+
+
+
+//             <label>
+
+//                 Time:
+
+//                 <input
+
+//                     type="time"
+
+//                     name="appointmentTime"
+
+//                     value={formData.appointmentTime}
+
+//                     onChange={handleChange}
+
+//                     required
+
+//                     data-testid="time-input"
+
+//                 />
+
+//             </label>
+
+
+
+//             <label>
+
+//                 Reason:
+
+//                 <textarea
+
+//                     name="reason"
+
+//                     value={formData.reason}
+
+//                     onChange={handleChange}
+
+//                     placeholder="Reason for appointment"
+
+//                     required
+
+//                     data-testid="reason-input"
+
+//                 />
+
+//             </label>
+
+
+
+//             <button type="submit" data-testid="submit-button">
+
+//                 Request Appointment
+
+//             </button>
+
+//         </form>
+
+//     );
+
+// }
 import React, { useEffect, useState } from 'react';
 
-import './AppointmentForm.css';
-
-import * as api from '../utils/api'; // ✅ Assuming your mock functions are here
+import * as api from '../utils/api';
 
 
 
 export default function AppointmentForm() {
 
-        const [patients, setPatients] = useState([]);
+    const [patients, setPatients] = useState([]);
 
-        const [doctors, setDoctors] = useState([]);
+    const [doctors, setDoctors] = useState([]);
 
-        const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
+
+        patient: '',
+
+        doctor: '',
+
+        date: '',
+
+        time: '',
+
+        reason: '',
+
+    });
+
+    const [errors, setErrors] = useState({});
+
+    const [message, setMessage] = useState('');
+
+    const [loading, setLoading] = useState(false);
+
+
+
+    useEffect(() => {
+
+        api.fetchPatients().then(setPatients);
+
+        api.fetchDoctors().then(setDoctors);
+
+    }, []);
+
+
+
+    const validate = () => {
+
+        const newErrors = {};
+
+        if (!formData.patient) newErrors.patient = 'Patient is required';
+
+        if (!formData.doctor) newErrors.doctor = 'Doctor is required';
+
+        if (!formData.date) newErrors.date = 'Date is required';
+
+        if (!formData.time) newErrors.time = 'Time is required';
+
+        if (!formData.reason) newErrors.reason = 'Reason is required';
+
+        setErrors(newErrors);
+
+        return Object.keys(newErrors).length === 0;
+
+    };
+
+
+
+    const handleChange = (e) => {
+
+        setFormData((f) => ({ ...f, [e.target.name]: e.target.value }));
+
+    };
+
+
+
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        setMessage('');
+
+        if (!validate()) return;
+
+
+
+        setLoading(true);
+
+        try {
+
+            await api.createAppointment({
+
+                patientId: formData.patient,
+
+                doctorId: formData.doctor,
+
+                appointmentDate: formData.date,
+
+                appointmentTime: formData.time,
+
+                reason: formData.reason,
+
+            });
+
+            setMessage('Appointment successfully booked');
+
+            setFormData({
 
                 patient: '',
 
@@ -23,270 +313,185 @@ export default function AppointmentForm() {
 
                 time: '',
 
-                reason: ''
+                reason: '',
 
-        });
+            });
 
-        const [errors, setErrors] = useState({});
+            setErrors({});
 
-        const [message, setMessage] = useState('');
+        } catch {
 
+            setMessage('Server error');
 
+        }
 
-        useEffect(() => {
+        setLoading(false);
 
-                api.fetchPatients().then(setPatients);
+    };
 
-                api.fetchDoctors().then(setDoctors);
 
-        }, []);
 
+    return (
 
+        <form onSubmit={handleSubmit}>
 
-        const validate = () => {
+            <div>
 
-                const e = {};
+                <label>Patient:</label>
 
-                if (!formData.patient) e.patient = 'Patient is required';
+                <select
 
-                if (!formData.doctor) e.doctor = 'Doctor is required';
+                    data-testid="patient-select"
 
-                if (!formData.date) e.date = 'Date is required';
+                    name="patient"
 
-                if (!formData.time) e.time = 'Time is required';
+                    value={formData.patient}
 
-                if (!formData.reason) e.reason = 'Reason is required';
+                    onChange={handleChange}
 
-                setErrors(e);
+                >
 
-                return Object.keys(e).length === 0;
+                    <option value="">Select patient</option>
 
-        };
+                    {patients.map((p) => (
 
+                        <option key={p.id} value={p.id.toString()}>
 
+                            {p.name}
 
-        const handleChange = (e) => {
+                        </option>
 
-                setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+                    ))}
 
-        };
+                </select>
 
+                {errors.patient && <p>{errors.patient}</p>}
 
+            </div>
 
-        const handleSubmit = async (e) => {
 
-                e.preventDefault();
 
-                setMessage('');
+            <div>
 
-                if (!validate()) return;
+                <label>Doctor:</label>
 
+                <select
 
+                    data-testid="doctor-select"
 
-                try {
+                    name="doctor"
 
-                        await api.createAppointment({
+                    value={formData.doctor}
 
-                                patientId: Number(formData.patient),
+                    onChange={handleChange}
 
-                                doctorId: Number(formData.doctor),
+                >
 
-                                appointmentDate: formData.date,
+                    <option value="">Select doctor</option>
 
-                                appointmentTime: formData.time,
+                    {doctors.map((d) => (
 
-                                reason: formData.reason,
-                                status: 'REQUESTED'
+                        <option key={d.id} value={d.id.toString()}>
 
-                        });
+                            {d.name} ({d.specialization})
 
+                        </option>
 
+                    ))}
 
-                        
+                </select>
 
-                        setFormData({ patient: '', doctor: '', date: '', time: '', reason: '' });
-                        setErrors({});
-                        setMessage('Appointment successfully booked');
+                {errors.doctor && <p>{errors.doctor}</p>}
 
-                } catch (err) {
+            </div>
 
-                        setMessage('Server error');
 
-                }
 
-        };
+            <div>
 
+                <label>Date:</label>
 
+                <input
 
-        return (
+                    data-testid="date-input"
 
-                <form className="appointment-form" onSubmit={handleSubmit}>
+                    type="date"
 
-                        <select
+                    name="date"
 
-                                name="patient"
+                    value={formData.date}
 
-                                value={formData.patient}
+                    onChange={handleChange}
 
-                                onChange={handleChange}
+                />
 
-                                data-testid="patient-select"
+                {errors.date && <p>{errors.date}</p>}
 
-                        >
+            </div>
 
-                                <option value="">Select Patient</option>
 
-                                {patients.map(p => (
 
-                                        <option key={p.id} value={p.id}>
+            <div>
 
-                                                {p.name}
+                <label>Time:</label>
 
-                                        </option>
+                <input
 
-                                ))}
+                    data-testid="time-input"
 
-                        </select>
+                    type="time"
 
-                        {errors.patient && <p className="error">{errors.patient}</p>}
+                    name="time"
 
+                    value={formData.time}
 
+                    onChange={handleChange}
 
-                        <select
+                />
 
-                                name="doctor"
+                {errors.time && <p>{errors.time}</p>}
 
-                                value={formData.doctor}
+            </div>
 
-                                onChange={handleChange}
 
-                                data-testid="doctor-select"
 
-                        >
+            <div>
 
-                                <option value="">Select Doctor</option>
+                <label>Reason:</label>
 
-                                {doctors.map((d) => (
+                <input
 
-                                        <option key={d.id} value={d.id}>
+                    data-testid="reason-input"
 
-                                                {d.name} ({d.specialization})
+                    type="text"
 
-                                        </option>
+                    name="reason"
 
-                                ))}
+                    value={formData.reason}
 
-                        </select>
+                    onChange={handleChange}
 
-                        {errors.doctor && <p className="error">{errors.doctor}</p>}
+                />
 
+                {errors.reason && <p>{errors.reason}</p>}
 
+            </div>
 
-                        <input
 
-                                type="date"
 
-                                name="date"
+            <button type="submit" disabled={loading}>
 
-                                value={formData.date}
+                Book Appointment
 
-                                onChange={handleChange}
+            </button>
 
-                                data-testid="date-input"
 
-                        />
 
-                        {errors.date && <p className="error">{errors.date}</p>}
+            {message && <p>{message}</p>}
 
+        </form>
 
+    );
 
-                        <input
+}
 
-                                type="time"
-
-                                name="time"
-
-                                value={formData.time}
-
-                                onChange={handleChange}
-
-                                data-testid="time-input"
-
-                        />
-
-                        {errors.time && <p className="error">{errors.time}</p>}
-
-
-
-                        <input
-
-                                type="text"
-
-                                name="reason"
-
-                                placeholder="Reason"
-
-                                value={formData.reason}
-
-                                onChange={handleChange}
-
-                                data-testid="reason-input"
-
-                        />
-
-                        {errors.reason && <p className="error">{errors.reason}</p>}
-
-
-
-                        <button type="submit" data-testid="submit-button">
-
-                                Book Appointment
-
-                        </button>
-
-
-
-                        {message &&<p>{message}</p>}
-
-                </form>
-
-        );
-
-}/*
-export async function fillForm() {
-
-          // Dynamically import testing utilities only when called in test environment
-
-            const { screen, fireEvent } = await import('@testing-library/react');
-
-
-
-              const patientSelect = screen.getByTestId('patient-select');
-
-                fireEvent.change(patientSelect, { target: { value: patientSelect.options[1]?.value || '' } });
-
-
-
-                  const doctorSelect = screen.getByTestId('doctor-select');
-
-                    fireEvent.change(doctorSelect, { target: { value: doctorSelect.options[1]?.value || '' } });
-
-
-
-                      const dateInput = screen.getByTestId('date-input');
-
-                        fireEvent.change(dateInput, { target: { value: '2025-08-15' } });
-
-
-
-                          const timeInput = screen.getByTestId('time-input');
-
-                            fireEvent.change(timeInput, { target: { value: '14:30' } });
-
-
-
-                              const reasonInput = screen.getByTestId('reason-input');
-
-                                fireEvent.change(reasonInput, { target: { value: 'Routine checkup' } });
-
-}*/
